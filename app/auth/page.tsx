@@ -85,10 +85,14 @@ export default function LoginPage() {
                     <p className="text-right font-display text-gray-500">Quên mật khẩu?</p>
 
                     <button 
-                        className="font-display self-center text-white bg-blue px-7 py-2.5 rounded-lg"
+                        disabled={loading}
+                        className={`
+                            font-display self-center text-white bg-blue px-7 py-2.5 rounded-lg transition-all duration-200
+                            ${loading ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}
+                        `}
                         onClick={handleLogin}
                     >
-                        Đăng nhập
+                        {loading ? "Đang xử lý..." : "Đăng nhập"}
                     </button>
                 </div>
             </div>

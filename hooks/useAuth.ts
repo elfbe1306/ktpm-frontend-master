@@ -1,20 +1,34 @@
 "use client";
 import { axiosClient } from "@/api/axiosClient";
+import { RootState } from "@/store";
 import { setUser } from "@/store/userSlice";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 
 export function useAuth(redirectTo: string) {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const pathname = usePathname();
     const dispatch = useDispatch();
+    const user = useSelector((state: RootState) => state.user.user);
 
     useEffect(() => {
         const fetchProfile = async () => {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                router.push(redirectTo);
+                setLoading(false);
+                return;
+            }
+            
             try {
-                const token = localStorage.getItem("token");
+                if (user) {
+                    setLoading(false);
+                    return;
+                }
 
                 const response = await axiosClient.get("/user/profile", {
                     headers: { Authorization: `Bearer ${token}` },
@@ -24,7 +38,9 @@ export function useAuth(redirectTo: string) {
                 
                 if (response.data.role === "student") {
                     router.push("/");
-                } else {
+                } 
+
+                if (response.data.role === "teacher" && !pathname.startsWith("/teacher")) {
                     router.push("/teacher");
                 }
             } catch {
@@ -36,7 +52,7 @@ export function useAuth(redirectTo: string) {
         };
 
         fetchProfile();
-    }, [dispatch, router, redirectTo])
+    }, [dispatch, router, redirectTo, pathname, user])
 
     return { loading };
 }
