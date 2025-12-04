@@ -33,23 +33,20 @@ export default function LoginPage() {
             
             const response = await axiosClient.post("/user/login", { email: email, password: password });
 
-            localStorage.setItem("token", response.data.accessToken);
-            dispatch(setUser({
-                id: response.data.userId,
-                name: response.data.name,
-                email: response.data.email,
-                createdAt: response.data.createdAt,
-                role: response.data.role
-            }));
-            
-            if (response.data.role === "student") {
-                router.push("/");
+            if (response.data.success) {
+                localStorage.setItem("token", response.data.data.accessToken);
+                dispatch(setUser(response.data.data));
+                
+                if (response.data.role === "student") {
+                    router.push("/");
+                } else {
+                    router.push("/teacher");
+                }
             } else {
-                router.push("/teacher");
+                dispatch(setAlert({ alertMessage: response.data.error, alertType: "error" }));
             }
-        } catch(error: any) {
-            const msg = error?.response?.data?.message || "Đã xảy ra lỗi";    
-            dispatch(setAlert({ alertMessage: msg, alertType: "error" }));
+        } catch {
+            dispatch(setAlert({ alertMessage: "Đã xảy ra lỗi", alertType: "error" }));
         } finally {
             setLoading(false);
         }

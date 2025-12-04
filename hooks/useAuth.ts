@@ -34,14 +34,19 @@ export function useAuth(redirectTo: string) {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 
-                dispatch(setUser(response.data));
+                if (response.data.success) {
+                    dispatch(setUser(response.data.data));
                 
-                if (response.data.role === "student") {
-                    router.push("/");
-                } 
-
-                if (response.data.role === "teacher" && !pathname.startsWith("/teacher")) {
-                    router.push("/teacher");
+                    if (response.data.role === "student") {
+                        router.push("/");
+                    } 
+    
+                    if (response.data.role === "teacher" && !pathname.startsWith("/teacher")) {
+                        router.push("/teacher");
+                    }
+                } else {
+                    localStorage.removeItem("token");
+                    router.push(redirectTo);
                 }
             } catch {
                 localStorage.removeItem("token");
