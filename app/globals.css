@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import "tailwindcss";
 
 @theme {
   --color-blue-dark: rgb(15, 76, 117);
   --color-blue: rgb(50, 130, 184);
   --color-blue-light: rgb(187, 225, 250);
+
+  --font-display: "Inter", sans-serif;
 }
