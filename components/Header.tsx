@@ -1,8 +1,7 @@
 
 export function Header() {
     return (
-        <div className="bg-darkBlue">
-            hi
+        <div className="bg-blue-light h-[60px]">
         </div>
     )
 }
