@@ -43,7 +43,7 @@ export default function LoginPage() {
             }));
             
             if (response.data.role === "student") {
-                router.push("/student");
+                router.push("/");
             } else {
                 router.push("/teacher");
             }

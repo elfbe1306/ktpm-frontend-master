@@ -23,7 +23,7 @@ export function useAuth(redirectTo: string) {
                 dispatch(setUser(response.data));
                 
                 if (response.data.role === "student") {
-                    router.push("/student");
+                    router.push("/");
                 } else {
                     router.push("/teacher");
                 }
