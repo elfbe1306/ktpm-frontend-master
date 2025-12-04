@@ -1,5 +1,5 @@
 
-
+import {BarChart} from "@/components/BarChart"
 export default function TeacherHomePage() {
     
     return (
@@ -48,60 +48,7 @@ export default function TeacherHomePage() {
             </div>
 
             {/* Bar Chart Area */}
-            <div className="h-80 relative">
-              {/* Y-Axis Labels */}
-              <div className="absolute inset-y-0 left-0 text-xs text-gray-500 w-8 flex flex-col justify-between py-1">
-                <span>32</span>
-                <span>24</span>
-                <span>16</span>
-                <span>8</span>
-                <span>0</span>
-              </div>
-
-              {/* Chart Grid and Bars */}
-              <div className="absolute inset-y-0 right-0 w-[calc(100%-3rem)] h-full grid grid-cols-12 gap-2 pb-6 px-1 items-end">
-                {/* Jan */}
-                <div className="bg-indigo-600 rounded-t-sm h-[25%]"></div>
-                {/* Feb */}
-                <div className="bg-indigo-600 rounded-t-sm h-[62.5%]"></div>
-                {/* Mar */}
-                <div className="bg-indigo-600 rounded-t-sm h-[93.75%]"></div>
-                {/* Apr */}
-                <div className="bg-indigo-600 rounded-t-sm h-[62.5%]"></div>
-                {/* May */}
-                <div className="bg-indigo-600 rounded-t-sm h-[31.25%]"></div>
-                {/* Jun */}
-                <div className="bg-indigo-600 rounded-t-sm h-[62.5%]"></div>
-                {/* Jul */}
-                <div className="bg-indigo-600 rounded-t-sm h-[93.75%]"></div>
-                {/* Aug */}
-                <div className="bg-indigo-600 rounded-t-sm h-[62.5%]"></div>
-                {/* Sep */}
-                <div className="bg-indigo-600 rounded-t-sm h-[31.25%]"></div>
-                {/* Oct */}
-                <div className="bg-indigo-600 rounded-t-sm h-[62.5%]"></div>
-                {/* Nov */}
-                <div className="bg-indigo-600 rounded-t-sm h-[93.75%]"></div>
-                {/* Dec */}
-                <div className="bg-indigo-600 rounded-t-sm h-[62.5%]"></div>
-              </div>
-
-              {/* X-Axis Labels */}
-              <div className="absolute bottom-0 right-0 w-[calc(100%-3rem)] text-xs text-gray-500 grid grid-cols-12 gap-2 text-center pt-2">
-                <span>Jan</span>
-                <span>Feb</span>
-                <span>Mar</span>
-                <span>Apr</span>
-                <span>May</span>
-                <span>Jun</span>
-                <span>Jul</span>
-                <span>Aug</span>
-                <span>Sep</span>
-                <span>Oct</span>
-                <span>Nov</span>
-                <span>Dec</span>
-              </div>
-            </div>
+            <BarChart/>
           </div>
 
           {/* Recent Messages (Right Column) */}
