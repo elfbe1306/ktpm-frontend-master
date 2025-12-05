@@ -12,28 +12,7 @@ export default function TeacherHomePage() {
     <div className="bg-gray-100 p-8 min-h-screen font-sans">
       {/* Main Dashboard Container */}
         <div className="max-w-7xl mx-auto bg-white shadow-xl rounded-lg p-6 space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <h1 className="text-2xl font-semibold text-gray-800 font-display">Bảng điều khiển</h1>
-            
-            {/* Khu vực chứa 2 Dropdown */}
-            <div className="flex flex-row gap-3 w-full md:w-auto">
-                {/* Dropdown Học kỳ */}
-              <select className="bg-white  text-gray-700 text-sm font-display rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full md:w-auto p-2.5 outline-none cursor-pointer">
-                <option value="HK251">HK251</option>
-                <option value="HK243">HK243</option>
-                <option value="HK242">HK242</option>
-                <option value="HK241">HK241</option>
-              </select>
-
-                {/* Dropdown Môn học */}
-              <select className="bg-white border border-gray-300 text-gray-700 text-sm font-display rounded-lg focus:ring-blue-500 block w-full md:w-auto p-2.5 outline-none cursor-pointer">
-                <option value="all">Tất cả môn học</option>
-                <option value="SE104">Kiến trúc phần mềm</option>
-                <option value="IT001">Nhập môn lập trình</option>
-                <option value="IT002">Lập trình hướng đối tượng</option>
-                </select>
-            </div>
-        </div>
+        <h1 className="text-2xl font-semibold text-gray-800 font-display">Bảng điều khiển</h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="lg:col-span-3 xl:col-span-4 flex flex-row justify-between gap-6">
                 <div className="bg-white p-4 w-150 rounded-lg shadow-md flex flex-col items-start space-y-2 border border-gray-100">
