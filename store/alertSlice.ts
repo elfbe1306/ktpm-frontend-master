@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-
 interface AlertState {
     alertMessage: string | null;
     alertType: "success" | "error" | "warning" | "info";
