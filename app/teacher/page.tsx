@@ -1,6 +1,6 @@
 
 import {BarChart} from "@/components/BarChart"
-import { MdOutlineTask } from "react-icons/md";
+import { MdTask } from "react-icons/md";
 export default function TeacherHomePage() {
     
     return (
@@ -58,14 +58,13 @@ export default function TeacherHomePage() {
 
             {/* Message 1 */}
             <div className="flex items-center space-x-3 hover:bg-gray-50 p-2 -mx-2 rounded-lg cursor-pointer transition-colors">
-                <div className="p-3 rounded-xl bg-cyan-200 text-cyan-700">
-                  <MdOutlineTask size={24} />
+                <div className="p-3 rounded-full bg-green-01">
+                  <MdTask size={24} color="white" />
                 </div>
-              <div className="flex-grow">
-                <p className="font-medium text-gray-800">Hank Schrader</p>
-                <p className="text-sm text-gray-500">@johnducky</p>
+              <div className="flex-1">
+                <p className="font-medium text-gray-800">Bài tập số 1</p>
+                <p className="text-sm text-gray-500">Kiến trúc phần mềm</p>
               </div>
-              <div className="w-2 h-2 rounded-full bg-blue-400"></div>
             </div>
 
             {/* Message 2 */}
