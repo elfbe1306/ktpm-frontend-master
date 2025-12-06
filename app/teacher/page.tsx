@@ -1,11 +1,11 @@
-
 "use client";
-import {BarChart} from "@/components/BarChart";
+import { BarChart } from "@/components/BarChart";
 import { StudentTable } from "@/components/StudentTable";
 import { FaBookReader } from "react-icons/fa";
 import { BsPeopleFill } from "react-icons/bs";
 import { useState } from "react";
 
+// --- 1. INTERFACES (Định nghĩa kiểu dữ liệu) ---
 export interface Subject {
   code: string;
   name: string;
@@ -19,6 +19,7 @@ export interface StudentProficiency {
   avAs: number;
 }
 
+// --- 2. DỮ LIỆU CẤU HÌNH (Thêm : Record<string, ...> để sửa lỗi TypeScript) ---
 export const SEMESTER_DATA: Record<string, Subject[]> = {
   "HK251": [
     { code: "251_SA3_CC01", name: "CC01_Kiến trúc phần mềm" },
@@ -35,6 +36,7 @@ export const SEMESTER_DATA: Record<string, Subject[]> = {
   "HK241": []
 };
 
+// Dữ liệu học sinh
 export const STUDENTS_BY_SUBJECT: Record<string, StudentProficiency[]> = {
   "251_SA3_CC01": [
     { id: 1, name: "Nguyễn Văn A", avBT: 2.0, avTest: 5.0, avAs: 5.0 },
@@ -63,40 +65,62 @@ export const STUDENTS_BY_SUBJECT: Record<string, StudentProficiency[]> = {
   "DEFAULT": []
 };
 
+// Dữ liệu biểu đồ
+const CHART_DATA_BY_SEMESTER: Record<string, { categories: string[], series: { name: string, data: number[] }[] }> = {
+  "HK251": {
+    categories: ['Kiến trúc PM (CC01)', 'Kiến trúc PM (CN01)', 'Kiến trúc PM (L01)', 'Công nghệ PM (CC01)', 'Công nghệ PM (CN01)', 'Công nghệ PM (L01)'],
+    series: [
+      { name: 'Điểm >=8', data: [44, 55, 57, 56, 61, 80] },
+      { name: 'Điểm <4', data: [10, 5, 2, 8, 3, 5] },
+    ]
+  },
+  "HK243": {
+    categories: ['Công nghệ PM (L01)'],
+    series: [
+      { name: 'Điểm >=8', data: [30] },
+      { name: 'Điểm <4', data: [5] },
+    ]
+  },
+  "HK242": { categories: [], series: [] },
+  "HK241": { categories: [], series: [] }
+};
 
 export default function TeacherHomePage() {
-    
+  
+  // State cho Bảng học sinh
   const [selectedSemester, setSelectedSemester] = useState<string>("HK251");
-    // Mặc định chọn môn đầu tiên của HK251
   const [selectedSubject, setSelectedSubject] = useState<string>("251_SA3_CC01");
 
-  const currentSubjects = SEMESTER_DATA[selectedSemester] || [];
-    
-    // Lấy danh sách học sinh dựa trên môn đang chọn
-  const currentStudentList = STUDENTS_BY_SUBJECT[selectedSubject] || [];
+  // --- SỬA LỖI 1: KHAI BÁO THIẾU STATE CHO BIỂU ĐỒ ---
+  const [chartSemester, setChartSemester] = useState<string>("HK251");
 
-    // Xử lý thay đổi Học kỳ
+  // Lấy dữ liệu an toàn
+  const currentSubjects = SEMESTER_DATA[selectedSemester] || [];
+  const currentStudentList = STUDENTS_BY_SUBJECT[selectedSubject] || [];
+  
+  // Lấy dữ liệu Chart dựa trên chartSemester (độc lập với bảng)
+  const currentChartData = CHART_DATA_BY_SEMESTER[chartSemester] || { categories: [], series: [] };
+
+  // --- SỬA LỖI 2: THÊM KIỂU CHO EVENT ---
   const handleSemesterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       const newSemester = event.target.value;
       setSelectedSemester(newSemester);
-        
-        // Khi đổi học kỳ, tự động chọn môn đầu tiên
+      
+      // Logic tự động chọn môn đầu tiên khi đổi kỳ
       const subjectsInNewSemester = SEMESTER_DATA[newSemester] || [];
       if (subjectsInNewSemester.length > 0) {
           setSelectedSubject(subjectsInNewSemester[0].code);
       } else {
           setSelectedSubject(""); 
       }
-    };
+  };
 
-    // Xử lý thay đổi Môn học
-    const handleSubjectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedSubject(event.target.value);
-    };
+  const handleSubjectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setSelectedSubject(event.target.value);
+  };
 
-    return (
+  return (
     <div className="bg-gray-100 p-8 min-h-screen font-sans">
-      {/* Main Dashboard Container */}
         <div className="max-w-7xl mx-auto bg-white shadow-xl rounded-lg p-6 space-y-8">
         <h1 className="text-2xl font-semibold text-gray-800 font-display">Bảng điều khiển</h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -106,10 +130,9 @@ export default function TeacherHomePage() {
                   <FaBookReader size={25}/>
                 </div>
                 <p className="text-sm text-gray-500 font-display">Tổng số khóa học</p>
-                <p className="text-xl font-bold text-gray-800">7</p>
+                <p className="text-xl font-bold text-gray-800">{currentSubjects.length}</p>
                 </div>
 
-                {/* Stat Card 2:*/}
                 <div className="bg-white p-4 w-150 rounded-lg shadow-md flex flex-col items-start space-y-2 border border-gray-100">
                 <div className="p-3 rounded-xl bg-cyan-200 text-cyan-700">
                   <BsPeopleFill size={25}/>
@@ -121,21 +144,37 @@ export default function TeacherHomePage() {
         </div>
 
         <hr className="border-gray-200" />
-        {/* Main Content Area (Graph & Activities) */}
         <div className="grid grid-cols-1 gap-6">
-          {/* Bar Chart (Left Column) */}
           <div className="xl:col-span-2 bg-white p-6 rounded-lg shadow-md border border-gray-100">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">Số lượng học sinh có điểm trung bình giỏi và yếu theo từng môn học</h2>
-              <svg className="w-6 h-6 text-gray-500 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+            
+            {/* --- DROPDOWN CHỌN KỲ CHO BIỂU ĐỒ --- */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Thống kê học sinh theo môn học
+              </h2>
+              
+              <div className="flex items-center gap-2">
+                  <select 
+                    value={chartSemester}
+                    onChange={(e) => setChartSemester(e.target.value)}
+                    className="g-white text-sm font-display p-1 cursor-pointer"
+                  >
+                    {Object.keys(SEMESTER_DATA).map((hk) => (
+                        <option key={hk} value={hk}>{hk}</option>
+                    ))}
+                  </select>
+              </div>
             </div>
-            {/* Bar Chart Area */}
-            <BarChart/>
+            
+            <BarChart 
+                categories={currentChartData.categories} 
+                series={currentChartData.series} 
+            />
+
           </div>
         </div>
 
+        {/* Bảng học sinh (Dùng state riêng selectedSemester) */}
         <StudentTable 
             studentList={currentStudentList}
             semesters={Object.keys(SEMESTER_DATA)}
@@ -148,5 +187,5 @@ export default function TeacherHomePage() {
 
       </div>
     </div>
-    )
+  )
 }
