@@ -1,8 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface LearningContent {
+    id: string,
+    topic: string,
+    description: string,
+    typeContent: string,
+    createdAt: string,
+    url: string
+}
+
 interface LearningContentFolderItem {
     id: string,
-    folderName: string
+    folderName: string,
+    contents: LearningContent[]
 }
 
 interface CourseState {

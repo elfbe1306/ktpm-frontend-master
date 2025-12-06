@@ -5,6 +5,7 @@ import { setLearningContentFolders } from "@/store/courseSlice";
 import { useParams } from "next/navigation"
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { CourseWrapper } from "@/components/CourseWrapper";
 
 export default function CourseIdLayout({ children } : { children: React.ReactNode }) {
     const { id } = useParams();
@@ -25,9 +26,13 @@ export default function CourseIdLayout({ children } : { children: React.ReactNod
         fetchLearningContentFolder();
     }, [course, dispatch, courseId]);
 
+    if (!course) return (
+        <div></div>
+    )
+
     return (
-        <div>
+        <CourseWrapper>
             {children}
-        </div>
+        </CourseWrapper>
     )
 }
