@@ -1,7 +1,6 @@
 
 "use client";
 import {BarChart} from "@/components/BarChart";
-import {RecentActivities} from "@/components/RecentActivities";
 import { StudentTable } from "@/components/StudentTable";
 import { FaBookReader } from "react-icons/fa";
 import { BsPeopleFill } from "react-icons/bs";
@@ -15,42 +14,51 @@ export interface Subject {
 export interface StudentProficiency {
   id: number;
   name: string;
-  workCompleted: string;
-  averageScore: number;
-  needingAttention: number;
-  workingTowards: number;
-  mastered: number;
-  theme: "red" | "yellow" | "green";
+  avBT: number;
+  avTest: number;
+  avAs: number;
 }
 
 export const SEMESTER_DATA: Record<string, Subject[]> = {
   "HK251": [
-    { code: "SE104", name: "Kiến trúc phần mềm" },
-    { code: "IT001", name: "Nhập môn lập trình" },
-    { code: "SE121", name: "Đồ án 1" }
+    { code: "251_SA3_CC01", name: "CC01_Kiến trúc phần mềm" },
+    { code: "251_SA3_CN01", name: "CN01_Kiến trúc phần mềm" },
+    { code: "251_SA3_L01", name: "L01_Kiến trúc phần mềm" },
+    { code: "251_SE3_CC01", name: "CC01_Công nghệ phần mềm" },
+    { code: "251_SE3_CN01", name: "CN01_Công nghệ phần mềm" },
+    { code: "251_SE3_L01", name: "L01_Công nghệ phần mềm" }
   ],
   "HK243": [
-    { code: "IT002", name: "Lập trình hướng đối tượng" },
-    { code: "MA003", name: "Đại số tuyến tính" }
+    { code: "243_SE3_L01", name: "L01_Công nghệ phần mềm" }
   ],
-  "HK242": [
-    { code: "IT003", name: "Cấu trúc dữ liệu" }
-  ],
+  "HK242": [],
   "HK241": []
 };
 
 export const STUDENTS_BY_SUBJECT: Record<string, StudentProficiency[]> = {
-  "SE104": [
-    { id: 1, name: "Nguyễn Văn A", workCompleted: "33 / 36", averageScore: 23, needingAttention: 45, workingTowards: 8, mastered: 7, theme: "red" },
-    { id: 2, name: "Dante Podenzana", workCompleted: "31 / 36", averageScore: 53, needingAttention: 6, workingTowards: 35, mastered: 19, theme: "yellow" },
-    { id: 3, name: "Susan Chan", workCompleted: "27 / 36", averageScore: 82, needingAttention: 1, workingTowards: 14, mastered: 45, theme: "green" }
+  "251_SA3_CC01": [
+    { id: 1, name: "Nguyễn Văn A", avBT: 2.0, avTest: 5.0, avAs: 5.0 },
+    { id: 2, name: "Trần Thị B", avBT: 2, avTest: 5.5, avAs: 6.0},
+    { id: 3, name: "Phan Văn C", avBT: 2, avTest: 5.5, avAs: 1.0}
   ],
-  "IT001": [
-    { id: 4, name: "John Doe", workCompleted: "10 / 36", averageScore: 45, needingAttention: 20, workingTowards: 10, mastered: 2, theme: "yellow" },
-    { id: 5, name: "Alice Smith", workCompleted: "36 / 36", averageScore: 95, needingAttention: 0, workingTowards: 5, mastered: 50, theme: "green" }
+  "251_SA3_CN01": [
+    { id: 4, name: "Lý Văn D", avBT: 2, avTest: 4.5, avAs: 2.0},
+    { id: 5, name: "Trần Văn E", avBT: 2, avTest: 9.5, avAs: 6 }
   ],
-  "IT002": [
-     { id: 6, name: "Michael Brown", workCompleted: "15 / 30", averageScore: 12, needingAttention: 30, workingTowards: 2, mastered: 0, theme: "red" }
+  "251_SA3_L01": [
+     { id: 6, name: "Phạm Văn E", avBT: 2.0, avTest: 1.2, avAs: 3.0}
+  ],
+  "251_SE3_CC01": [
+     { id: 7, name: "Nguyễn Thị A", avBT: 2.0, avTest: 1.2, avAs: 3.0}
+  ],
+  "251_SE3_CN01": [
+     { id: 8, name: "Phan Thị B", avBT: 2.0, avTest: 1.2, avAs: 3.0}
+  ],
+  "251_SE3_L01": [
+     { id: 9, name: "Trần Văn Cao C", avBT: 2.0, avTest: 1.2, avAs: 3.0}
+  ],
+  "243_SE3_L01": [
+     { id: 10, name: "Phạm Văn Hoàng ", avBT: 2.0, avTest: 1.2, avAs: 3.0}
   ],
   "DEFAULT": []
 };
@@ -60,7 +68,7 @@ export default function TeacherHomePage() {
     
   const [selectedSemester, setSelectedSemester] = useState<string>("HK251");
     // Mặc định chọn môn đầu tiên của HK251
-  const [selectedSubject, setSelectedSubject] = useState<string>("SE104");
+  const [selectedSubject, setSelectedSubject] = useState<string>("251_SA3_CC01");
 
   const currentSubjects = SEMESTER_DATA[selectedSemester] || [];
     
@@ -98,7 +106,7 @@ export default function TeacherHomePage() {
                   <FaBookReader size={25}/>
                 </div>
                 <p className="text-sm text-gray-500 font-display">Tổng số khóa học</p>
-                <p className="text-xl font-bold text-gray-800">6</p>
+                <p className="text-xl font-bold text-gray-800">7</p>
                 </div>
 
                 {/* Stat Card 2:*/}
@@ -114,7 +122,7 @@ export default function TeacherHomePage() {
 
         <hr className="border-gray-200" />
         {/* Main Content Area (Graph & Activities) */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {/* Bar Chart (Left Column) */}
           <div className="xl:col-span-2 bg-white p-6 rounded-lg shadow-md border border-gray-100">
             <div className="flex justify-between items-center mb-4">
@@ -126,8 +134,6 @@ export default function TeacherHomePage() {
             {/* Bar Chart Area */}
             <BarChart/>
           </div>
-          {/* Recent Activities (Right Column) */}
-            <RecentActivities/>
         </div>
 
         <StudentTable 

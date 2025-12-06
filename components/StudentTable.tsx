@@ -8,12 +8,9 @@ export interface Subject {
 export interface StudentProficiency {
   id: number;
   name: string;
-  workCompleted: string;
-  averageScore: number;
-  needingAttention: number;
-  workingTowards: number;
-  mastered: number;
-  theme: "red" | "yellow" | "green";
+  avBT: number;
+  avTest: number;
+  avAs: number;
 }
 
 interface ProficiencyTableProps {
@@ -38,6 +35,21 @@ export const StudentTable = ({
   onSemesterChange,
   onSubjectChange
 }: ProficiencyTableProps) => {
+    const calculateStatus = (s: StudentProficiency) => {
+        // Tính trung bình cộng 3 cột
+        const avg = (s.avBT + s.avTest + s.avAs) / 3;
+        
+        // Logic xếp loại
+        if (avg < 4) {
+        return { label: "Yếu", colorClass: "text-red-600 font-display" };
+        } else if (avg >= 4 && avg < 7) {
+        return { label: "Trung bình", colorClass: "text-orange-500 font-display" };
+        } else if (avg >= 7 && avg < 8) {
+        return { label: "Khá", colorClass: "text-yellow-600 font-display" };
+        } else { // >= 8 và <= 10
+        return { label: "Giỏi", colorClass: "text-green-600 font-display" };
+        }
+    };
   return (
     <div className="bg-white shadow-xl rounded-lg p-6 overflow-x-auto">
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
@@ -48,7 +60,7 @@ export const StudentTable = ({
           <select
             value={selectedSemester}
             onChange={onSemesterChange}
-            className="bg-white border border-gray-300 text-gray-700 text-sm font-display rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none cursor-pointer"
+            className="bg-white text-sm font-display p-1 cursor-pointer"
           >
             {semesters.map((hk) => (
               <option key={hk} value={hk}>{hk}</option>
@@ -59,7 +71,7 @@ export const StudentTable = ({
           <select
             value={selectedSubject}
             onChange={onSubjectChange}
-            className="bg-white border border-gray-300 text-gray-700 text-sm font-display rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none cursor-pointer"
+            className="bg-white text-sm font-display p-1 cursor-pointer"
             disabled={subjects.length === 0}
           >
             {subjects.length > 0 ? (
@@ -78,82 +90,54 @@ export const StudentTable = ({
         <div className="col-span-3 text-left">Họ và tên</div>
         <div className="col-span-2">Điểm trung bình bài tập</div>
         <div className="col-span-3">Điểm trung bình bài kiểm tra</div>
-        <div className="col-span-3">Điểm trung bình bài tập lớn</div>
-        <div className="col-span-1">Tình trạng</div>
+        <div className="col-span-2">Điểm trung bình bài tập lớn</div>
+        <div className="col-span-2">Tình trạng</div>
       </div>
 
-      {/* Table Body */}
-      <div className="space-y-3 min-w-[800px]">
+{/* Table Body */}
+      <div className="space-y-0 min-w-[800px]">
         {studentList.length > 0 ? (
-          studentList.map((student) => (
-            <div
-              key={student.id}
-              className={`grid grid-cols-12 gap-4 items-center p-4 rounded-xl ${
-                student.theme === 'red' ? 'bg-red-50' :
-                student.theme === 'yellow' ? 'bg-yellow-50' : 'bg-green-50'
-              }`}
-            >
-              {/* Name & Avatar */}
-              <div className="col-span-3 flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shadow-sm ${
-                  student.theme === 'red' ? 'bg-red-300' :
-                  student.theme === 'yellow' ? 'bg-yellow-400' : 'bg-green-300'
-                }`}>
-                  {student.name.charAt(0)}
+          studentList.map((student) => {
+            // Gọi hàm tính toán trạng thái cho từng học sinh
+            const status = calculateStatus(student);
+
+            return (
+              <div
+                key={student.id}
+                className="grid grid-cols-12 gap-4 items-center p-4 bg-white border-b border-gray-100 hover:bg-gray-50 transition-colors"
+              >
+                {/* Name & Avatar */}
+                <div className="col-span-3 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-gray-600 bg-gray-200 shadow-sm">
+                    {student.name.charAt(0)}
+                  </div>
+                  <span className="font-medium font-display text-gray-700">{student.name}</span>
                 </div>
-                <span className="font-medium font-display text-gray-700">{student.name}</span>
-              </div>
 
-              {/* Work Completed */}
-              <div className="col-span-2 text-center font-semibold text-gray-600">
-                {student.workCompleted}
-              </div>
-
-              {/* Average Score */}
-              <div className="col-span-3 flex items-center justify-center gap-2">
-                <div className={`h-10 w-12 rounded-lg ${
-                  student.theme === 'red' ? 'bg-red-400' :
-                  student.theme === 'yellow' ? 'bg-yellow-400' : 'bg-green-500'
-                }`}></div>
-                <div className="bg-white px-3 py-2 rounded-lg shadow-sm font-bold text-gray-700 w-16 text-center">
-                  {student.averageScore}%
+                {/* Điểm avBT */}
+                <div className="col-span-2 flex justify-center font-display">
+                    {student.avBT}
                 </div>
-              </div>
 
-              {/* Needing Attention */}
-              <div className="col-span-2 flex justify-end pr-6">
-                <div className={`flex items-center justify-center font-bold rounded-full ${
-                    student.theme === 'red' 
-                    ? 'w-14 h-14 bg-red-400 text-white text-lg shadow-md' 
-                    : 'w-8 h-8 bg-red-200 text-red-700 text-xs mt-3'
-                }`}>
-                    {student.needingAttention}
+                {/* Điểm avTest */}
+                <div className="col-span-3 flex justify-center font-display">
+                    {student.avTest}
+                </div>
+
+                {/* Điểm avAs */}
+                <div className="col-span-2 flex justify-center font-display">
+                    {student.avAs}
+                </div>
+
+                {/* Tình trạng (Status) */}
+                <div className="col-span-2 flex justify-center">
+                  <div className={`flex items-center justify-center font-bold rounded-lg px-4 py-2 text-sm  ${status.colorClass}`}>
+                      {status.label}
+                  </div>
                 </div>
               </div>
-
-              {/* Working Towards */}
-              <div className="col-span-1 flex justify-center">
-                <div className={`flex items-center justify-center font-bold rounded-full ${
-                    student.theme === 'yellow' 
-                    ? 'w-14 h-14 bg-yellow-400 text-white text-lg shadow-md' 
-                    : 'w-10 h-10 bg-yellow-400 text-white text-sm mt-2'
-                }`}>
-                    {student.workingTowards}
-                </div>
-              </div>
-
-              {/* Mastered */}
-              <div className="col-span-1 flex justify-center">
-                 <div className={`flex items-center justify-center font-bold rounded-full ${
-                    student.theme === 'green' 
-                    ? 'w-16 h-16 bg-green-500 text-white text-xl shadow-md -my-2' 
-                    : 'w-10 h-10 bg-green-500 text-white text-sm mt-2'
-                }`}>
-                    {student.mastered}
-                </div>
-              </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <div className="text-center py-8 text-gray-500 italic">
             Chưa có dữ liệu thống kê cho môn học này.
