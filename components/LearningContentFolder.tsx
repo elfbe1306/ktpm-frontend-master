@@ -4,6 +4,7 @@ import { LinkIcon } from "@/assests/LinkIcon";
 import { useState } from "react"
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { PdfIcon } from "@/assests/PdfIcon";
 
 interface LearningContent {
     id: string,
@@ -38,21 +39,24 @@ export function LearningContentFolder({ folderId, folderName, contents }: Learni
                     {open && (
                         <div className="flex gap-x-3">
                             <Link href={`/teacher/course/${id}/quiz/${folderId}`} className="bg-blue-dark rounded-lg text-white p-2.5 cursor-pointer">Tạo bài tập mới</Link>
-                            <Link href={`/teacher/course/${id}/content/${folderId}}`} className="bg-blue-dark rounded-lg text-white p-2.5 cursor-pointer">Tạo nội dung mới</Link>
+                            <Link href={`/teacher/course/${id}/content/${folderId}`} className="bg-blue-dark rounded-lg text-white p-2.5 cursor-pointer">Tạo nội dung mới</Link>
                         </div>
                     )}
                 </div>
             </div>
 
             {open && (
-                <div className="font-display flex flex-col gap-y-3 border-t mx-[3vw] py-5 border-blue-dark">
+                <div className="font-display flex flex-col mx-[3vw]">
                     {contents.map((c) => (
-                        <div key={c.id} className="flex flex-row gap-x-3">
-                            {c.typeContent === "video" ? (
-                                <LinkIcon width={24} height={24} fill={"orange"}/>
-                            ) : (
-                                <div></div>
-                            )}
+                        <div key={c.id} className="flex flex-row gap-x-3 border-t border-blue-dark py-5">
+                            <div className="w-10 flex justify-center"> 
+                                {c.typeContent === "video" ? (
+                                    <LinkIcon width={24} height={24} fill={"orange"} />
+                                ) : (
+                                    <PdfIcon width={36} height={36} fill={"none"} />
+                                )}
+                            </div>
+
                             <div className="flex flex-col gap-y-2">
                                 <Link className="text-lg" href={c.url} target="_blank" rel="noopener noreferrer">{c.topic}</Link>
                                 <p>{c.description}</p>

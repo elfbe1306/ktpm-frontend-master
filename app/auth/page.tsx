@@ -67,7 +67,7 @@ export default function LoginPage() {
                         type={"email"}
                         value={email}
                         placeHolder={"Nhập email"} 
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
 
                     <Input 
@@ -76,7 +76,7 @@ export default function LoginPage() {
                         type={"password"}
                         value={password}
                         placeHolder={"Nhập mật khẩu"} 
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
 
                     <p className="text-right font-display text-gray-500">Quên mật khẩu?</p>
