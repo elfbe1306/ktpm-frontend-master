@@ -68,14 +68,14 @@ export const STUDENTS_BY_SUBJECT: Record<string, StudentProficiency[]> = {
 // Dữ liệu biểu đồ
 const CHART_DATA_BY_SEMESTER: Record<string, { categories: string[], series: { name: string, data: number[] }[] }> = {
   "HK251": {
-    categories: ['Kiến trúc PM (CC01)', 'Kiến trúc PM (CN01)', 'Kiến trúc PM (L01)', 'Công nghệ PM (CC01)', 'Công nghệ PM (CN01)', 'Công nghệ PM (L01)'],
+    categories: ['CC01_Kiến trúc phần mềm', 'CN01_Kiến trúc phần mềm', 'L01_Kiến trúc phần mềm', 'CC01_Công nghệ phần mềm', 'CN01_Công nghệ phần mềm', 'L01_Công nghệ phần mềm'],
     series: [
-      { name: 'Điểm >=8', data: [44, 55, 57, 56, 61, 80] },
+      { name: 'Điểm >=8', data: [30, 50, 60, 50, 60, 80] },
       { name: 'Điểm <4', data: [10, 5, 2, 8, 3, 5] },
     ]
   },
   "HK243": {
-    categories: ['Công nghệ PM (L01)'],
+    categories: ['L01_Công nghệ phần mềm'],
     series: [
       { name: 'Điểm >=8', data: [30] },
       { name: 'Điểm <4', data: [5] },
@@ -91,7 +91,7 @@ export default function TeacherHomePage() {
   const [selectedSemester, setSelectedSemester] = useState<string>("HK251");
   const [selectedSubject, setSelectedSubject] = useState<string>("251_SA3_CC01");
 
-  // --- SỬA LỖI 1: KHAI BÁO THIẾU STATE CHO BIỂU ĐỒ ---
+  // ---  KHAI BÁO THIẾU STATE CHO BIỂU ĐỒ ---
   const [chartSemester, setChartSemester] = useState<string>("HK251");
 
   // Lấy dữ liệu an toàn
@@ -101,7 +101,7 @@ export default function TeacherHomePage() {
   // Lấy dữ liệu Chart dựa trên chartSemester (độc lập với bảng)
   const currentChartData = CHART_DATA_BY_SEMESTER[chartSemester] || { categories: [], series: [] };
 
-  // --- SỬA LỖI 2: THÊM KIỂU CHO EVENT ---
+  // --- THÊM KIỂU CHO EVENT ---
   const handleSemesterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       const newSemester = event.target.value;
       setSelectedSemester(newSemester);
@@ -121,16 +121,16 @@ export default function TeacherHomePage() {
 
   return (
     <div className="bg-gray-100 p-8 min-h-screen font-sans">
-        <div className="max-w-7xl mx-auto bg-white shadow-xl rounded-lg p-6 space-y-8">
+      <div className="max-w-7xl mx-auto bg-white shadow-xl rounded-lg p-6 space-y-8">
         <h1 className="text-2xl font-semibold text-gray-800 font-display">Bảng điều khiển</h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="lg:col-span-3 xl:col-span-4 flex flex-row justify-between gap-6">
-                <div className="bg-white p-4 w-150 rounded-lg shadow-md flex flex-col items-start space-y-2 border border-gray-100">
+          <div className="lg:col-span-3 xl:col-span-4 flex flex-row justify-between gap-6">
+            <div className="bg-white p-4 w-150 rounded-lg shadow-md flex flex-col items-start space-y-2 border border-gray-100">
                 <div className="p-3 rounded-xl bg-purple-200 text-purple-700">
                   <FaBookReader size={25}/>
                 </div>
                 <p className="text-sm text-gray-500 font-display">Tổng số khóa học</p>
-                <p className="text-xl font-bold text-gray-800">{currentSubjects.length}</p>
+                <p className="text-xl font-bold text-gray-800">7</p>
                 </div>
 
                 <div className="bg-white p-4 w-150 rounded-lg shadow-md flex flex-col items-start space-y-2 border border-gray-100">
@@ -139,7 +139,7 @@ export default function TeacherHomePage() {
                 </div>
                 <p className="text-sm text-gray-500 font-display">Tổng số học sinh</p>
                 <p className="text-xl font-bold text-gray-800">183.000</p>
-                </div>
+            </div>
           </div>
         </div>
 
@@ -149,9 +149,7 @@ export default function TeacherHomePage() {
             
             {/* --- DROPDOWN CHỌN KỲ CHO BIỂU ĐỒ --- */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-              <h2 className="text-xl font-semibold text-gray-800">
-                Thống kê học sinh theo môn học
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-800">Số lượng học sinh yếu và giỏi theo từng khóa học</h2>
               
               <div className="flex items-center gap-2">
                   <select 
