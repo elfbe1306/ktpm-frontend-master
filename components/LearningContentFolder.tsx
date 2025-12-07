@@ -9,6 +9,7 @@ import { PencilIcon } from "@/assests/PencilIcon";
 import { TrashCanIcon } from "@/assests/TrashCanIcon";
 import { LearningContentFolderModelUpdate } from "./LearningContentFolderModelUpdate";
 import { LearningContentModalDelete } from "./LearningContentModalDelete";
+import { LearningContentFolderModalDelete } from "./LearningContentFolderModalDelete";
 
 interface LearningContent {
     id: string,
@@ -30,6 +31,7 @@ export function LearningContentFolder({ folderId, folderName, contents }: Learni
     const [open, setOpen] = useState<boolean>(false);
     const [editOpen, setEditOpen] = useState<boolean>(false);
     const [deleteLCOpen, setDeleteLCOpen] = useState<boolean>(false);
+    const [deleteLCFOpen, setDeleteLCFOpen] = useState<boolean>(false);
 
     return (
         <>
@@ -46,7 +48,7 @@ export function LearningContentFolder({ folderId, folderName, contents }: Learni
                             <p className="text-xl">{folderName}</p>
                             <div className="flex items-center flex-row gap-x-5">
                                 <button className="cursor-pointer" onClick={() => setEditOpen(true)}><PencilIcon width={24} height={24} fill={"rgb(15, 76, 117)"}/></button>
-                                <button className="cursor-pointer"><TrashCanIcon width={24} height={24} fill={"red"}/></button>
+                                <button className="cursor-pointer" onClick={() => setDeleteLCFOpen(true)}><TrashCanIcon width={24} height={24} fill={"red"}/></button>
                             </div>
                         </div>
                         {open && (
@@ -90,6 +92,10 @@ export function LearningContentFolder({ folderId, folderName, contents }: Learni
 
             {editOpen && (
                 <LearningContentFolderModelUpdate folderId={folderId} title={"Sửa thư mục"} onClose={() => setEditOpen(false)}/>
+            )}
+
+            {deleteLCFOpen && (
+                <LearningContentFolderModalDelete onClose={() => setDeleteLCFOpen(false)} title={"Xoá thư mục"} folderId={folderId} folderName={folderName}/>
             )}
         </>
     )

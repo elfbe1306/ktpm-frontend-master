@@ -1,21 +1,20 @@
+"use client";
 import { useState } from "react";
-import { LayoutModal } from "./LayoutModal";
+import { LayoutModal } from "./LayoutModal"
 import { axiosClient } from "@/api/axiosClient";
 import { useDispatch } from "react-redux";
-import { removeLearningContent } from "@/store/courseSlice";
+import { removeLearningContentFolder } from "@/store/courseSlice";
 import { useParams } from "next/navigation";
 import { setAlert } from "@/store/alertSlice";
 
-interface LearningContentModalDeleteProps {
+interface LearningContentFolderModalDeleteProps {
     onClose: () => void;
     title: string;
-    learningContentId: string;
     folderId: string;
-    typeContent: string;
-    topic: string;
+    folderName: string;
 }
 
-export function LearningContentModalDelete({ title, onClose, learningContentId, folderId, typeContent, topic }: LearningContentModalDeleteProps) {
+export function LearningContentFolderModalDelete({ onClose, title, folderId, folderName }: LearningContentFolderModalDeleteProps) {
     const { id } = useParams();
     const [loading, setLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
@@ -26,12 +25,12 @@ export function LearningContentModalDelete({ title, onClose, learningContentId, 
         try {
             setLoading(true);
 
-            const response = await axiosClient.delete(`/course/content/delete/${learningContentId}`, {data: { typeContent }});
-            dispatch(removeLearningContent({ courseId: id as string, folderId: folderId, contentId: response.data.data }));
-            dispatch(setAlert({ alertMessage: "Xoá thành công", alertType: "error" }));
+            const response = await axiosClient.delete(`/course/folder/${folderId}/delete`);
+            dispatch(removeLearningContentFolder({ courseId: id as string, folderId: response.data.data }));
+            dispatch(setAlert({ alertMessage: "Xoá thành công", alertType: "success" }));
             onClose();
-        } catch (error: any) {
-            console.error("There is an error deleting learning content:", error.message);
+        } catch(error: any) {
+            console.error("There is an error deleting learning content folder:", error.message);
         } finally {
             setLoading(false);
         }
@@ -39,7 +38,7 @@ export function LearningContentModalDelete({ title, onClose, learningContentId, 
 
     return (
         <LayoutModal onClose={onClose} title={title}>
-            <p className="text-center mt-5">Bạn chắc có muốn xoá <span className="text-blue-dark font-semibold">{topic}</span> </p>
+            <p className="text-center mt-5">Bạn chắc có muốn xoá <span className="text-blue-dark font-semibold">{folderName}</span> </p>
 
             <div className="flex justify-center items-center gap-x-[3vw] mt-[3vh]">
                 <button onClick={handleDelete} className={`w-[15vw] text-white bg-blue-dark py-2.5 px-10 rounded-lg cursor-pointer ${loading ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`} >
