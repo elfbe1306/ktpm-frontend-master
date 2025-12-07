@@ -13,7 +13,7 @@ interface LearningContentFolderModalProps {
     title: string;
 }
 
-export function LearningContentFolderModal({ onClose, title }: LearningContentFolderModalProps) {
+export function LearningContentFolderModalCreate({ onClose, title }: LearningContentFolderModalProps) {
     const { id } = useParams();
     const [folderName, setFolderName] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);

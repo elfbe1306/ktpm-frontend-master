@@ -45,6 +45,19 @@ const CourseSlice = createSlice({
             }
         },
 
+        updateLearningContentFolder(state, action: PayloadAction<{ courseId: string; folderId: string; folderName: string }>
+        ) {
+            const { courseId, folderId, folderName } = action.payload;
+            const course = state.find(c => c.id === courseId);
+        
+            if (course) {
+                const folder = course.learningContentFolder.find(f => f.id === folderId);
+                if (folder) {
+                    folder.folderName = folderName;
+                }
+            }
+        },
+
         setLearningContentFolders(state, action: PayloadAction<{ courseId: string; folders: LearningContentFolderItem[] }>) {
             const { courseId, folders } = action.payload;
             const course = state.find(c => c.id === courseId);
@@ -66,5 +79,5 @@ const CourseSlice = createSlice({
     }
 });
 
-export const { setCourse, setLearningContentFolders, addLearningContentFolder, addLearningContent } = CourseSlice.actions;
+export const { setCourse, setLearningContentFolders, addLearningContentFolder, updateLearningContentFolder, addLearningContent } = CourseSlice.actions;
 export default CourseSlice.reducer;

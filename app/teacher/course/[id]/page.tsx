@@ -3,7 +3,7 @@ import { RootState } from "@/store"
 import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { LearningContentFolder } from "@/components/LearningContentFolder";
-import { LearningContentFolderModal } from "@/components/LearningContentFolderModal";
+import { LearningContentFolderModalCreate } from "@/components/LearningContentFolderModalCreate";
 import { useState } from "react";
 
 export default function CourseId() {
@@ -31,7 +31,7 @@ export default function CourseId() {
             </div>
 
             {folderCreate && (
-                <LearningContentFolderModal title={"Tạo folder mới"} onClose={() => setFolderCreate(false)}/>
+                <LearningContentFolderModalCreate title={"Tạo folder mới"} onClose={() => setFolderCreate(false)}/>
             )}
         </>
     )
