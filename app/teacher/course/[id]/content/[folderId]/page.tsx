@@ -3,12 +3,14 @@ import { axiosClient } from "@/api/axiosClient";
 import { Dropfile } from "@/components/Dropfile"
 import { Input } from "@/components/Input"
 import { setAlert } from "@/store/alertSlice";
-import { useParams } from "next/navigation";
+import { addLearningContent } from "@/store/courseSlice";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react"
 import { useDispatch } from "react-redux";
 
 export default function ContentPage() {
-    const { folderId } = useParams();
+    const router = useRouter();
+    const { id, folderId } = useParams();
     const [loading, setLoading] = useState<boolean>(false);
     const [topic, setTopic] = useState<string>("");
     const [description, setDescription] = useState<string>("");
@@ -61,8 +63,8 @@ export default function ContentPage() {
             }
 
             const response = await axiosClient.post(`/course/content/create/${folderId}`, formData);
-            console.log(response);
-
+            dispatch(addLearningContent({ courseId: id as string, folderId: folderId as string, content: response.data.data }));
+            router.back();
         } catch(error: any) {
             console.log(error);
         } finally {
