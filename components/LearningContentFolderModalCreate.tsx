@@ -32,11 +32,8 @@ export function LearningContentFolderModalCreate({ onClose, title }: LearningCon
 
             const response = await axiosClient.post(`/course/folder/${id}/create`, { folderName });
 
-            dispatch(addLearningContentFolder({
-                courseId: id as string,
-                folder: response.data.data
-            }));
-    
+            dispatch(addLearningContentFolder({ courseId: id as string, folder: response.data.data }));
+            dispatch(setAlert({ alertMessage: "Tạo thành công", alertType: "success" }))
             onClose(); 
         } catch(error: any) {
             console.error("There is an error creating learning content folder:", error.message);

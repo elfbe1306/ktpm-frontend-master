@@ -75,9 +75,21 @@ const CourseSlice = createSlice({
             if (folder) {
                 folder.contents.push(content);
             }
+        },
+
+        removeLearningContent(state, action: PayloadAction<{ courseId: string; folderId: string; contentId: string }>) {
+            const { courseId, folderId, contentId } = action.payload;
+
+            const course = state.find(c => c.id === courseId);
+            if (!course) return;
+        
+            const folder = course.learningContentFolder.find(f => f.id === folderId);
+            if (!folder) return;
+        
+            folder.contents = folder.contents.filter(content => content.id !== contentId);
         }
     }
 });
 
-export const { setCourse, setLearningContentFolders, addLearningContentFolder, updateLearningContentFolder, addLearningContent } = CourseSlice.actions;
+export const { setCourse, setLearningContentFolders, addLearningContentFolder, updateLearningContentFolder, addLearningContent, removeLearningContent } = CourseSlice.actions;
 export default CourseSlice.reducer;

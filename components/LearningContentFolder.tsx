@@ -8,6 +8,7 @@ import { PdfIcon } from "@/assests/PdfIcon";
 import { PencilIcon } from "@/assests/PencilIcon";
 import { TrashCanIcon } from "@/assests/TrashCanIcon";
 import { LearningContentFolderModelUpdate } from "./LearningContentFolderModelUpdate";
+import { LearningContentModalDelete } from "./LearningContentModalDelete";
 
 interface LearningContent {
     id: string,
@@ -28,6 +29,7 @@ export function LearningContentFolder({ folderId, folderName, contents }: Learni
     const { id } = useParams();
     const [open, setOpen] = useState<boolean>(false);
     const [editOpen, setEditOpen] = useState<boolean>(false);
+    const [deleteLCOpen, setDeleteLCOpen] = useState<boolean>(false);
 
     return (
         <>
@@ -59,19 +61,27 @@ export function LearningContentFolder({ folderId, folderName, contents }: Learni
                 {open && (
                     <div className="font-display flex flex-col mx-[3vw]">
                         {contents.map((c) => (
-                            <div key={c.id} className="flex flex-row gap-x-3 border-t border-blue-dark py-5">
-                                <div className="w-10 flex justify-center"> 
-                                    {c.typeContent === "video" ? (
-                                        <LinkIcon width={24} height={24} fill={"orange"} />
-                                    ) : (
-                                        <PdfIcon width={36} height={36} fill={"none"} />
-                                    )}
+                            <div key={c.id} className="flex flex-row justify-between border-t border-blue-dark py-5">
+                                <div className="flex flex-row gap-x-3">
+                                    <div className="w-10 flex justify-center"> 
+                                        {c.typeContent === "video" ? (
+                                            <LinkIcon width={24} height={24} fill={"orange"} />
+                                        ) : (
+                                            <PdfIcon width={36} height={36} fill={"none"} />
+                                        )}
+                                    </div>
+
+                                    <div className="flex flex-col gap-y-2">
+                                        <Link className="text-lg" href={c.url} target="_blank" rel="noopener noreferrer">{c.topic}</Link>
+                                        <p>{c.description}</p>
+                                    </div>
                                 </div>
 
-                                <div className="flex flex-col gap-y-2">
-                                    <Link className="text-lg" href={c.url} target="_blank" rel="noopener noreferrer">{c.topic}</Link>
-                                    <p>{c.description}</p>
-                                </div>
+                                <button onClick={() => setDeleteLCOpen(true)} className="cursor-pointer"><TrashCanIcon width={24} height={24} fill={"red"}/></button>
+
+                                {deleteLCOpen && (
+                                    <LearningContentModalDelete onClose={() => setDeleteLCOpen(false)} title={"Xoá nội dung"} topic={c.topic} typeContent={c.typeContent} folderId={folderId} learningContentId={c.id}/>
+                                )}
                             </div>
                         ))}
                     </div>

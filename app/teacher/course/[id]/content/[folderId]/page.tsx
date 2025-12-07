@@ -64,6 +64,7 @@ export default function ContentPage() {
 
             const response = await axiosClient.post(`/course/content/create/${folderId}`, formData);
             dispatch(addLearningContent({ courseId: id as string, folderId: folderId as string, content: response.data.data }));
+            dispatch(setAlert({ alertMessage: "Tải lên thành công", alertType: "success" }));
             router.back();
         } catch(error: any) {
             console.log(error);

@@ -7,6 +7,7 @@ import { RootState } from "@/store";
 import { useState } from "react";
 import { axiosClient } from "@/api/axiosClient";
 import { updateLearningContentFolder } from "@/store/courseSlice";
+import { setAlert } from "@/store/alertSlice";
 
 
 interface LearningContentFolderModalProps {
@@ -33,6 +34,7 @@ export function LearningContentFolderModelUpdate({ folderId, onClose, title}: Le
 
             const response = await axiosClient.put(`/course/folder/${folderId}/update`, { folderName });
             dispatch(updateLearningContentFolder({ courseId: id as string, folderId: folderId, folderName: response.data.data.folderName }));
+            dispatch(setAlert({ alertMessage: "Cập nhật thành công", alertType: "success" }))
             onClose();
         } catch(error: any) {
             console.error("There is an error updating learning folder content: ", error.message);
