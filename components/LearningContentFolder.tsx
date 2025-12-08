@@ -10,6 +10,8 @@ import { TrashCanIcon } from "@/assests/TrashCanIcon";
 import { LearningContentFolderModelUpdate } from "./LearningContentFolderModelUpdate";
 import { LearningContentModalDelete } from "./LearningContentModalDelete";
 import { LearningContentFolderModalDelete } from "./LearningContentFolderModalDelete";
+import { ExerciseIcon } from "@/assests/ExerciseIcon";
+import { ClockIcon } from "@/assests/ClockIcon";
 
 interface LearningContent {
     id: string,
@@ -20,13 +22,25 @@ interface LearningContent {
     url: string
 }
 
+interface QuizFolder {
+    id: string,
+    topic: string,
+    description: string,
+    createdAt: string,
+    minutes: number,
+    openTime: string,
+    closeTime: string,
+    typeQuiz: string
+}
+
 interface LearningContentFolderProps {
     folderId: string,
     folderName: string,
-    contents: LearningContent[]
+    contents: LearningContent[],
+    quizFolders: QuizFolder[]
 }
 
-export function LearningContentFolder({ folderId, folderName, contents }: LearningContentFolderProps) {
+export function LearningContentFolder({ folderId, folderName, contents, quizFolders }: LearningContentFolderProps) {
     const { id } = useParams();
     const [open, setOpen] = useState<boolean>(false);
     const [editOpen, setEditOpen] = useState<boolean>(false);
@@ -84,6 +98,29 @@ export function LearningContentFolder({ folderId, folderName, contents }: Learni
                                 {deleteLCOpen && (
                                     <LearningContentModalDelete onClose={() => setDeleteLCOpen(false)} title={"Xoá nội dung"} topic={c.topic} typeContent={c.typeContent} folderId={folderId} learningContentId={c.id}/>
                                 )}
+                            </div>
+                        ))}
+
+                        {quizFolders.map((q) => (
+                            <div key={q.id} className="flex flex-row justify-between border-t border-blue-dark py-5">
+                                <div className="flex flex-row gap-x-3">
+                                    <div className="w-10 flex justify-center"> 
+                                        {q.typeQuiz === "Bài tập" ? (
+                                            <ExerciseIcon width={36} height={36} fill={"green"} />
+                                        ) : q.typeQuiz === "Bài tập lớn" ? (
+                                            <ExerciseIcon width={36} height={36} fill={"red"} />
+                                        ) : (
+                                            <ClockIcon width={36} height={36} fill={"#fba63c"} />
+                                        )}
+                                    </div>
+
+                                    <div className="flex flex-col gap-y-2">
+                                        <Link className="text-lg" href={`/teacher/course/${id}/quiz/${folderId}/review/${q.id}`}>{q.topic}</Link>
+                                        <p>{q.description}</p>
+                                    </div>
+                                </div>
+
+                                <button className="cursor-pointer"><TrashCanIcon width={24} height={24} fill={"red"}/></button>
                             </div>
                         ))}
                     </div>
