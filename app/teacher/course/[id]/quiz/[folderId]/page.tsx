@@ -12,6 +12,7 @@ import { axiosClient } from "@/api/axiosClient";
 import { InputNumber } from 'antd';
 import { clearQuestions } from "@/store/createQuestionSlice";
 import { addQuizToLearningFolder } from "@/store/courseSlice";
+import { DropfileQuiz } from "@/components/DropfileQuiz";
 
 export default function QuizPage() {
     const { id, folderId } = useParams();
@@ -75,7 +76,7 @@ export default function QuizPage() {
 
             <div className="flex justify-center items-center mt-[5vh]">
                 <div className="flex-1">
-
+                    <DropfileQuiz/>
                 </div>
 
                 <div className="flex-1">
