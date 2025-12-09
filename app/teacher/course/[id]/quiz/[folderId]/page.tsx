@@ -155,9 +155,10 @@ export default function QuizPage() {
                 </button>
                 <button
                     onClick={handleSave}
-                    className="w-[15vw] text-white bg-blue-dark py-2.5 px-10 rounded-lg cursor-pointer"
+                    disabled={loading}
+                    className={`text-white bg-blue-dark py-2.5 px-10 rounded-lg cursor-pointer ${loading ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`}
                 >
-                    Lưu
+                    {loading ? "Đang xử lý" : "Lưu"}
                 </button>
             </div>
 
