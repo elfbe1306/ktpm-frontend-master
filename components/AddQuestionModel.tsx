@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { LayoutModal } from "./LayoutModal"
 import { RootState } from "@/store";
-import { addQuestion } from "@/store/createQuestionSlice";
+import { addQuizMultipleChoice, addQuizSubmit } from "@/store/createQuestionSlice";
 
 interface AddQuestionModalProps {
     onClose: () => void;
@@ -9,14 +9,14 @@ interface AddQuestionModalProps {
 
 export function AddQuestionModal({ onClose }: AddQuestionModalProps ) {
     const dispatch = useDispatch();
-    const questions = useSelector((state: RootState) => state.createQuestion.questions);
+    const quizMultipleChoice = useSelector((state: RootState) => state.createQuestion.quizMultipleChoice);
+    const quizSubmit = useSelector((state: RootState) => state.createQuestion.quizSubmit);
 
     const handleAddQuestion = (typeQuestion: "multipleChoice" | "fileSubmit") => {
         if (typeQuestion === "multipleChoice") {
-            dispatch(addQuestion({
-                questionNumber: questions.length,
+            dispatch(addQuizMultipleChoice({
+                questionNumber: quizMultipleChoice.length + quizSubmit.length,
                 text: "",
-                type: "multipleChoice",
                 answerA: "Tuỳ chọn 1",
                 answerB: "Tuỳ chọn 2",
                 answerC: "Tuỳ chọn 3",
@@ -24,10 +24,9 @@ export function AddQuestionModal({ onClose }: AddQuestionModalProps ) {
                 answer: "answerA",
             }));
         } else {
-            dispatch(addQuestion({
-                questionNumber: questions.length,
+            dispatch(addQuizSubmit({
+                questionNumber: quizMultipleChoice.length + quizSubmit.length,
                 text: "",
-                type: "fileSubmit",
                 url: ""
             }));
         }

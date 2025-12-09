@@ -4,21 +4,26 @@ import { useState } from "react";
 import { Radio } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { QuestionItem } from "@/components/QuestionItem";
+import { QuestionItemCreate } from "@/components/QuestionItemCreate";
 import { AddQuestionModal } from "@/components/AddQuestionModel";
 import { useParams, useRouter } from "next/navigation";
 import { setAlert } from "@/store/alertSlice";
 import { axiosClient } from "@/api/axiosClient";
+import { InputNumber } from 'antd';
+import { clearQuestions } from "@/store/createQuestionSlice";
+import { addQuizToLearningFolder } from "@/store/courseSlice";
 
 export default function QuizPage() {
-    const { folderId } = useParams();
+    const { id, folderId } = useParams();
     const router = useRouter();
     const [topic, setTopic] = useState<string>("");
     const [quizType, setQuizType] = useState<string>("Bài tập");
     const [description, setDescription] = useState<string>("");
+    const [minutes, setMinutes] = useState<number>(30);
     const [isAddQuestionOpen, setAddQuestionOpen] = useState<boolean>(false);
+    const quizMultipleChoice = useSelector((state: RootState) => state.createQuestion.quizMultipleChoice);
+    const quizSubmit = useSelector((state: RootState) => state.createQuestion.quizSubmit);
     const dispatch = useDispatch();
-    const questions = useSelector((state: RootState) => state.createQuestion.questions);
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -34,17 +39,35 @@ export default function QuizPage() {
             setLoading(true);
 
             const response = await axiosClient.post(`/course/quiz/create/${folderId}`, {
-                topic,
-                description,
-                questions
+                Topic: topic,
+                Description: description,
+                QuizType: quizType,
+                Minutes: minutes,
+                QuizMultipleChoices: quizMultipleChoice,
+                QuizSubmits: quizSubmit
             });
-            console.log(response);
+
+            dispatch(clearQuestions());
+            dispatch(addQuizToLearningFolder({ courseId: id as string, folderId: folderId as string, quizFolder: response.data.data }));
+            router.back();
         } catch(error: any) {
             console.error("There is an error creating quiz:", error.message);
         } finally {
             setLoading(false);
         }
     }
+
+    const sortedQuizMultipleChoice = quizMultipleChoice
+        .map(q => ({ ...q, type: "multipleChoice" as const }))
+        .sort((a, b) => a.questionNumber - b.questionNumber);
+
+    const sortedQuizSubmit = quizSubmit
+        .map(q => ({ ...q, type: "submit" as const }))
+        .sort((a, b) => a.questionNumber - b.questionNumber);
+
+    const mergedQuestions = [...sortedQuizMultipleChoice, ...sortedQuizSubmit].sort(
+        (a, b) => a.questionNumber - b.questionNumber
+    );
 
     return (
         <div className="font-display mt-3">
@@ -67,7 +90,7 @@ export default function QuizPage() {
                         />
 
                         <div className="flex items-center gap-x-10">
-                            <p className="font-display text-blue-dark w-[5vw]">Loại</p>
+                            <p className="font-display text-blue-dark w-[8vw]">Loại</p>
                             <Radio.Group
                                 onChange={(e) => setQuizType(e.target.value)}
                                 value={quizType}
@@ -88,6 +111,18 @@ export default function QuizPage() {
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
+
+                        <div className="flex items-center gap-x-10">
+                            <p className="font-display text-blue-dark w-[8vw]">Thời gian làm</p>
+                            <div className="flex-1">
+                                <InputNumber 
+                                    min={10} 
+                                    max={60} 
+                                    value={minutes}
+                                    onChange={(value) => setMinutes(value ?? 0)}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,8 +131,8 @@ export default function QuizPage() {
                 <p className="text-lg font-semibold text-blue-dark mb-4">Danh sách câu hỏi</p>
                                 
                 <div className="flex flex-col gap-y-4">
-                    {questions.map((q) => (
-                        <QuestionItem key={q.questionNumber} question={q}/>
+                    {mergedQuestions.map((q) => (
+                        <QuestionItemCreate key={q.questionNumber} question={q}/>
                     ))}
                 </div>
 

@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { Radio } from "antd";
 import { TrashCanIcon } from "@/assests/TrashCanIcon";
 import { useState } from "react";
@@ -31,7 +30,6 @@ interface QuestionItemProps {
 }
 
 export function QuestionItem ({ typeQuestionItem, question }: QuestionItemProps) {
-    const dispatch = useDispatch();
     const [isEdit, setEdit] = useState<boolean>(false);
 
     return (

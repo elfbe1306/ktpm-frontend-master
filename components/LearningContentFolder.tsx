@@ -116,7 +116,7 @@ export function LearningContentFolder({ folderId, folderName, contents, quizFold
 
                                     <div className="flex flex-col gap-y-2">
                                         <Link className="text-lg" href={`/teacher/course/${id}/quiz/${folderId}/review/${q.id}`}>{q.topic}</Link>
-                                        <p>{q.description}</p>
+                                        <p>{q.description} - Thời gian làm bài: {q.minutes} phút</p>
                                     </div>
                                 </div>
 

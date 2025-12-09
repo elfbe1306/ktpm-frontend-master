@@ -13,7 +13,7 @@ export function Input({ labelPosition, textLabel, value, type, placeHolder, onCh
 
     return (
         <div className={`flex gap-y-2 ${labelPosition === "top" ? "flex-col" : "flex-row items-center gap-x-10"}`}>
-            <p className="font-display text-blue-dark w-[5vw]">{textLabel}</p>
+            <p className="font-display text-blue-dark w-[8vw]">{textLabel}</p>
 
             {type === "textarea" ? (
                 <textarea

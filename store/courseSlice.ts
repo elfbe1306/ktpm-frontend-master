@@ -181,6 +181,17 @@ const CourseSlice = createSlice({
             if (index !== -1) {
                 quizFolder.quizSubmits[index] = quiz;
             }
+        },
+
+        addQuizToLearningFolder(state, action: PayloadAction<{ courseId: string, folderId: string, quizFolder: QuizFolder}>) {
+            const { courseId, folderId, quizFolder } = action.payload;
+            const course = state.find(c => c.id === courseId);
+            if (!course) return;
+
+            const folder = course.learningContentFolder.find(f => f.id === folderId)
+            if (!folder) return;
+
+            folder.quizFolders.push(quizFolder);
         }
     }
 });
@@ -188,5 +199,5 @@ const CourseSlice = createSlice({
 export const { 
     setCourse, setLearningContentFolders, addLearningContentFolder, updateLearningContentFolder, 
     removeLearningContentFolder, addLearningContent, removeLearningContent, addQuizQuestion, 
-    updateQuizMultipleChoice, updateQuizSubmit } = CourseSlice.actions;
+    updateQuizMultipleChoice, updateQuizSubmit, addQuizToLearningFolder } = CourseSlice.actions;
 export default CourseSlice.reducer;

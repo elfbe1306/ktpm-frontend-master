@@ -1,13 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface BaseQuestion {
+interface QuestionMultipleChoice {
     questionNumber: number;
     text: string;
-    type: "multipleChoice" | "fileSubmit";
-};
-
-interface QuestionMultipleChoice extends BaseQuestion {
-    type: "multipleChoice";
     answerA: string;
     answerB: string;
     answerC: string;
@@ -15,65 +10,95 @@ interface QuestionMultipleChoice extends BaseQuestion {
     answer: "answerA" | "answerB" | "answerC" | "answerD";
 }
 
-interface QuestionFileSubmit extends BaseQuestion {
-    type: "fileSubmit";
+interface QuestionSubmit {
+    questionNumber: number;
+    text: string;
     url: string;
 }
 
-export type Question = QuestionMultipleChoice | QuestionFileSubmit;
-
 interface QuestionState {
-    questions: Question[];
+    quizMultipleChoice: QuestionMultipleChoice[],
+    quizSubmit: QuestionSubmit[]
 };
 
 const initialState: QuestionState = {
-    questions: []
+    quizMultipleChoice: [],
+    quizSubmit: []
 };
 
 const questionSlice = createSlice({
     name:"question",
     initialState,
     reducers: {
-        addQuestion(state, action: PayloadAction<Question>) {
-            state.questions.push(action.payload);
+        addQuizMultipleChoice(state, action: PayloadAction<QuestionMultipleChoice>) {
+            state.quizMultipleChoice.push(action.payload);
         },
 
-        updateQuestion(state, action: PayloadAction<{ questionNumber: number, text: string }>) {
+        addQuizSubmit(state, action: PayloadAction<QuestionSubmit>) {
+            state.quizSubmit.push(action.payload);
+        },
+
+        updateQuizMultipleChoiceQuestion(state, action: PayloadAction<{ questionNumber: number, text: string }>) {
             const { questionNumber, text } = action.payload;
-            const question = state.questions.find(q => q.questionNumber === questionNumber);
+            const question = state.quizMultipleChoice.find(q => q.questionNumber === questionNumber);
             if (question) {
                 question.text = text;
             }
         },
 
-        updateQuestionOption(state, action: PayloadAction<{ questionNumber: number, text: string, key: "answerA" | "answerB" | "answerC" | "answerD" }>) {
+        updateQuizSubmitQuestion(state, action: PayloadAction<{ questionNumber: number, text: string }>) {
+            const { questionNumber, text } = action.payload;
+            const question = state.quizSubmit.find(q => q.questionNumber === questionNumber);
+            if (question) {
+                question.text = text;
+            }
+        },
+
+        updateQuizMultipleChoiceOption(state, action: PayloadAction<{ questionNumber: number, text: string, key: "answerA" | "answerB" | "answerC" | "answerD" }>) {
             const { questionNumber, key, text } = action.payload;
-            const question = state.questions.find(q => q.questionNumber === questionNumber);
-            if (question && question.type === "multipleChoice") {
+            const question = state.quizMultipleChoice.find(q => q.questionNumber === questionNumber);
+            if (question) {
                 question[key] = text;
             }
         },
 
         checkCorrectOption(state, action: PayloadAction<{ questionNumber: number, answer: "answerA" | "answerB" | "answerC" | "answerD"}>) {
             const { questionNumber, answer } = action.payload;
-            const question = state.questions.find(q => q.questionNumber === questionNumber);
-            if (question && question.type === "multipleChoice") {
+            const question = state.quizMultipleChoice.find(q => q.questionNumber === questionNumber);
+            if (question) {
                 question["answer"] = answer;
             }
         },
 
         deleteQuestion(state, action: PayloadAction<number>) {
-            const idToRemove = action.payload;
-            state.questions = state.questions.filter(q => q.questionNumber !== idToRemove);
+            const questionNumber = action.payload;
+            const isMC = state.quizMultipleChoice.some(q => q.questionNumber === questionNumber);
+            if (isMC) {
+                state.quizMultipleChoice = state.quizMultipleChoice
+                    .filter(q => q.questionNumber !== questionNumber)
+                    .map((q, index) => ({
+                        ...q,
+                        questionNumber: index
+                    }));
+            } else {
+                state.quizSubmit = state.quizSubmit
+                    .filter(q => q.questionNumber !== questionNumber)
+                    .map((q, index) => ({
+                        ...q,
+                        questionNumber: index
+                    }));
+            }
+        },
 
-            state.questions = state.questions.map((q, index) => ({
-                ...q,
-                questionNumber: index
-            }));
+        clearQuestions(state) {
+            state.quizMultipleChoice = [];
+            state.quizSubmit = [];
         }
     }
 });
 
 
-export const { addQuestion, updateQuestion, updateQuestionOption, deleteQuestion, checkCorrectOption } = questionSlice.actions;
+export const { addQuizMultipleChoice, addQuizSubmit, updateQuizMultipleChoiceQuestion, 
+    updateQuizSubmitQuestion, updateQuizMultipleChoiceOption, checkCorrectOption, 
+    deleteQuestion, clearQuestions } = questionSlice.actions;
 export default questionSlice.reducer;
